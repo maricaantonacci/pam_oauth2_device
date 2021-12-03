@@ -52,6 +52,7 @@ The configuration should be located at `/etc/pam_oauth2_device/config.json`.
 **NOTE** In order to proceed with the configuration, you need to register a client in IAM with the following characteristics:
    - scopes: `openid profile`
    - `device` grant
+   - redirect uri is not used (you can set it to `https://<server ip>`) 
 ---
 
 **oauth** - required section for your OAuth2 client configuration. 
