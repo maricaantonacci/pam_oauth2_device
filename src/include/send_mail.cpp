@@ -1,5 +1,5 @@
 #include "send_mail.hpp"
-
+#include <time.h>
 
 Email::Email(const std::string &to,
           const std::string &from,
@@ -15,15 +15,64 @@ Email::Email(const std::string &to,
     nameFrom_ = nameFrom;
     subject_ = subject;
     body_ = body;
- }; 
+ }
 
+std::string Email::dateTimeNow() const
+{
+    const int RFC5322_TIME_LEN = 32;
+    time_t t;
+    struct tm *tm;
+
+    std::string ret;
+    ret.resize(RFC5322_TIME_LEN);
+
+    time(&t);
+    tm = localtime(&t);
+
+    strftime(&ret[0], RFC5322_TIME_LEN, "%a, %d %b %Y %H:%M:%S %z", tm);
+
+    return ret;
+}
+
+std::string Email::generateMessageId() const
+{
+    const int MESSAGE_ID_LEN = 37;
+    time_t t;
+    struct tm tm;
+
+    std::string ret;
+    ret.resize(15);
+
+    time(&t);
+    gmtime_r(&t, &tm);
+
+    strftime(const_cast<char *>(ret.c_str()),
+             MESSAGE_ID_LEN,
+             "%Y%m%d%H%M%S.",
+             &tm);
+
+    ret.reserve(MESSAGE_ID_LEN);
+
+    static const char alphanum[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+
+    while (ret.size() < MESSAGE_ID_LEN) {
+        ret += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    return ret;
+}
 
 std::string Email::setPayloadText()
 {
     std::string text;
  
+    text += "Date: "  + dateTimeNow() + "\r\n";
     text += "To: <"   + to_   + ">\r\n";
     text += "From: <" + from_ + "> (" + nameFrom_ + ")\r\n";
+    text += "Message-ID: <" + generateMessageId() + "@" + from_.substr(from_.find('@') + 1) + ">\r\n";
     text += "Subject: "      + subject_ + "\r\n";
     text += "\r\n";
     text += body_ + "\r\n";
