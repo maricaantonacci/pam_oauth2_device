@@ -7,13 +7,13 @@ It uses the OAuth2 Device Flow, which means that during the login process, you w
 This module will then check if you're in the right group(s), if any has been specified in the module configuration, and allow or deny access.
 
 
-## Installation (Ubuntu 20.04)
+## Installation (Ubuntu 22.04)
 
 Download the debian package from the [releases page](https://github.com/maricaantonacci/pam_oauth2_device/releases) and install it, e.g.:
 
 ```
-wget https://github.com/maricaantonacci/pam_oauth2_device/releases/download/v0.0.1/pam-oauth2-device_0.0.1_all.deb
-sudo dpkg -i pam-oauth2-device_0.0.1_all.deb
+wget https://github.com/maricaantonacci/pam_oauth2_device/releases/download/v0.0.3/pam-oauth2-device_0.0.3_all.deb
+sudo dpkg -i pam-oauth2-device_0.0.3_all.deb
 ```
 The module and its configuration file will be installed:
 
@@ -24,7 +24,7 @@ The module and its configuration file will be installed:
 
 :warning: You have to edit the configuration file to make this module work.
 
-## Build (Ubuntu 20.04)
+## Build (Ubuntu 22.04)
 
 **Requirements**: make, g++ (`sudo apt install build-essential`)
 
@@ -52,7 +52,8 @@ The configuration should be located at `/etc/pam_oauth2_device/config.json`.
 **NOTE** In order to proceed with the configuration, you need to register a client in IAM with the following characteristics:
    - scopes: `openid profile`
    - `device` grant
-   - redirect uri is not used (you can set it to `https://<server ip>`) 
+   - redirect uri is not used (you can set it to `https://<server ip>`)
+   - The device code timeout default is 0. It should be a different value: set it to 300.
 ---
 
 **oauth** - required section for your OAuth2 client configuration. 
